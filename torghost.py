@@ -16,7 +16,7 @@ VERSION = "3.1.0"
 
 IP_API = "https://check.torproject.org/api/ip"
 
-LATEST_RELEASE_API = "https://api.github.com/repos/NandanDesai/torghost/releases/latest"
+LATEST_RELEASE_API = "https://api.github.com/repos/databurn-in/TorGhost/releases/latest"
 
 
 class bcolors:
@@ -51,7 +51,7 @@ def logo():
        | |/ _ \| '__| |  _| '_ \ / _ \/ __| __|
        | | (_) | |  | |_| | | | | (_) \__ \ |_
        |_|\___/|_|   \____|_| |_|\___/|___/\__|
-	v3.1.0 - github.com/NandanDesai/torghost
+	v3.1.0 - by DataBurn
 
     """
     print bcolors.ENDC
@@ -60,13 +60,13 @@ def logo():
 def usage():
     print """
     TorGhost usage:
-    -s    --start       Start TorGhost
+    -s    --start       Start Tor
     -r    --switch      Request new tor exit node
-    -x    --stop        Stop TorGhost
-    -h    --help        Print this help and exit
-    -u    --update      check for update
-    -v    --version     check the current version
-    -i    --info        check the current ip address and tor status
+    -x    --stop        Stop Tor
+    -h    --help        Print help
+    -u    --update      Check for update
+    -v    --version     Check the current version
+    -i    --info        Check the current ip address and Tor status
     """
     sys.exit()
 
@@ -271,7 +271,7 @@ def check_update():
             bcolors.BOLD + "Would you like to download latest version and build from Git repo? [Y/n]" + bcolors.ENDC).lower()
         if choice in yes:
             os.system(
-                'cd /tmp && git clone  https://github.com/NandanDesai/torghost')
+                'cd /tmp && git clone  https://github.com/databurn-in/TorGhost')
             os.system('cd /tmp/torghost && sudo ./build.sh')
         elif choice in no:
             print t() + " Update aborted by user"

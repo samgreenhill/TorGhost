@@ -3,9 +3,9 @@
 </p>
 <h2 align="center">TorGhost</h2>
 
-[![GitHub release](https://img.shields.io/github/v/release/NandanDesai/torghost?include_prereleases)](https://github.com/NandanDesai/TwitterScraper4J/releases) ![License: GPL-3.0](https://img.shields.io/github/license/nandandesai/torghost)
+[![GitHub release](https://img.shields.io/github/v/release/databurn-in/TorGhost?include_prereleases)](https://github.com/databurn-in/TorGhost/releases) ![License: GPL-3.0](https://img.shields.io/github/license/databurn-in/TorGhost)
 
-TorGhost is an anonymization script. TorGhost redirects all your internet traffic through SOCKS5 tor proxy. DNS requests are also redirected via tor, thus preventing DNSLeak. The scripts also disables unsafe packets exiting the system. Some packets like ping request can compromise your identity.
+TorGhost redirects all your internet traffic through SOCKS5 tor proxy. DNS requests are also redirected via tor, thus preventing DNSLeak. The scripts also disables unsafe packets exiting the system. Some packets like ping request can compromise your identity.
 
 ## Caution!
 
@@ -15,9 +15,9 @@ This project was built independently and is **not affiliated** with the [Tor Pro
 ## Recommended way to install TorGhost
 
 
-`git clone https://github.com/NandanDesai/torghost.git`
+`git clone https://github.com/databurn-in/TorGhost.git`
 
-`cd torghost`
+`cd TorGhost`
 
 `sudo chmod +x build.sh`
 

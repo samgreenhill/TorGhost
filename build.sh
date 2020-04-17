@@ -1,4 +1,4 @@
-echo "Torghost installer v3.0"
+echo "TorGhost will be built and installed on your system!"
 echo "Installing prerequisites "
 sudo apt-get install tor python-pip -y 
 echo "Installing dependencies "
