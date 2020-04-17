@@ -59,4 +59,8 @@ The original project was not confirming whether the user is actually connected t
 
 ## Issue with this project
 
-As this TorGhost pings to https://check.torproject.org to confirm Tor connectivity, any adversary (like your government or your ISP) who is targeting you can figure out that you are using this version of TorGhost just by monitoring whether you are contacting https://check.torproject.org or not. So, if your goal is to stay completely anonymous, then TorGhost is not for you.
+As this TorGhost pings to https://check.torproject.org to confirm Tor connectivity, any adversary (like your government or your ISP) who is targeting you can figure out that you are using this version of TorGhost just by monitoring whether you are contacting https://check.torproject.org or not. So, if your goal is to stay completely anonymous, then TorGhost is not for you. Also, it takes a lot more than just a simple script like TorGhost to make yourself anonymous on the internet.
+
+## Donate to Tor!
+
+If you are a regular user of Tor, then please [consider donating to the them!](https://donate.torproject.org/)
