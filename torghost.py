@@ -10,12 +10,13 @@ import time
 import signal
 from stem import Signal
 from stem.control import Controller
+import notify2
 
 VERSION = "3.1.0"
 
-IP_API = "https://api.ipify.org/?format=json"
+IP_API = "https://check.torproject.org/api/ip"
 
-LATEST_RELEASE_API = "https://api.github.com/repos/SusmithKrishnan/torghost/releases/latest"
+LATEST_RELEASE_API = "https://api.github.com/repos/NandanDesai/torghost/releases/latest"
 
 
 class bcolors:
@@ -50,41 +51,80 @@ def logo():
        | |/ _ \| '__| |  _| '_ \ / _ \/ __| __|
        | | (_) | |  | |_| | | | | (_) \__ \ |_
        |_|\___/|_|   \____|_| |_|\___/|___/\__|
-	v3.1.0 - github.com/SusmithKrishnan/torghost
+	v3.1.0 - github.com/NandanDesai/torghost
 
     """
     print bcolors.ENDC
 
 
 def usage():
-    logo()
     print """
-    Torghost usage:
-    -s    --start       Start Torghost
+    TorGhost usage:
+    -s    --start       Start TorGhost
     -r    --switch      Request new tor exit node
-    -x    --stop        Stop Torghost
+    -x    --stop        Stop TorGhost
     -h    --help        Print this help and exit
     -u    --update      check for update
-
+    -v    --version     check the current version
+    -i    --info        check the current ip address and tor status
     """
     sys.exit()
 
 
-def ip():
-    while True:
-        try:
-            jsonRes = get(IP_API).json()
-            ipTxt = jsonRes["ip"]
-        except:
-            continue
-        break
-    return ipTxt
+def printVersion():
+    print "TorGhost version: " + VERSION
+    sys.exit()
+
+
+def info():
+    try:
+        jsonRes = get(IP_API).json()
+        ipTxt = jsonRes["IP"]
+        print "CURRENT IP : " + bcolors.GREEN + ipTxt + bcolors.ENDC
+        torStatus = jsonRes["IsTor"]
+        if torStatus == True:
+            print "Tor status : " + bcolors.GREEN + "Tor is active!" + bcolors.ENDC
+        else:
+            print "Tor status : " + bcolors.RED + "Tor is inactive!" + bcolors.ENDC
+    except Exception as e:
+        f = open("torghost.dump", "w")
+        f.write(str(e))
+        print t() + bcolors.RED + " Some error occured while connecting to https://check.torproject.org. Error message is dumped in 'torghost.dump' file in the current directory." + bcolors.ENDC
+        f.close()
+    sys.exit()
+
+
+def tor_active():
+    try:
+        jsonRes = get(IP_API).json()
+        return jsonRes["IsTor"]
+    except Exception as e:
+        f = open("torghost.dump", "w")
+        f.write(str(e))
+        print t() + bcolors.RED + " Some error occured while connecting to https://check.torproject.org. Error message is dumped in 'torghost.dump' file in the current directory." + bcolors.ENDC
+        f.close()
+    return False
 
 
 def check_root():
     if os.geteuid() != 0:
         print "You must be root; Say the magic word 'sudo'"
         sys.exit(0)
+
+
+notify2.init("TorGhost")
+n = notify2.Notification(None)
+n.set_urgency(notify2.URGENCY_NORMAL)
+n.set_timeout(10000)
+
+
+def notify(text):
+    try:
+        n.update('TorGhost', text)
+        n.show()
+    except:
+        # ignore if any notification related errors
+        return
 
 
 signal.signal(signal.SIGINT, sigint_handler)
@@ -105,7 +145,24 @@ Torrc = '/etc/tor/torghostrc'
 resolv = '/etc/resolv.conf'
 
 
+def reset():
+    os.system('mv /etc/resolv.conf.bak /etc/resolv.conf')
+    IpFlush = \
+        """
+	iptables -P INPUT ACCEPT
+	iptables -P FORWARD ACCEPT
+	iptables -P OUTPUT ACCEPT
+	iptables -t nat -F
+	iptables -t mangle -F
+	iptables -F
+	iptables -X
+	"""
+    os.system(IpFlush)
+    os.system('sudo fuser -k 9051/tcp > /dev/null 2>&1')
+
+
 def start_torghost():
+    logo()
     print t() + ' Always check for updates using -u option'
     os.system('sudo cp /etc/resolv.conf /etc/resolv.conf.bak')
     if os.path.exists(Torrc) and TorrcCfgString in open(Torrc).read():
@@ -161,33 +218,30 @@ def start_torghost():
 
     os.system(iptables_rules)
     print bcolors.GREEN + '[done]' + bcolors.ENDC
-    print t() + ' Fetching current IP...'
-    print t() + ' CURRENT IP : ' + bcolors.GREEN + ip() + bcolors.ENDC
+    time.sleep(3)
+    if tor_active() == True:
+        notify("Tor has started successfully!")
+        print t() + bcolors.GREEN + ' Tor has started successfully.' + bcolors.ENDC
+    else:
+        print t() + bcolors.RED + ' Something went wrong. Rolling back the process...' + bcolors.ENDC
+        reset()
+        print t() + bcolors.RED + ' You are not on Tor. Process was failed and rolled back.' + bcolors.ENDC
 
 
 def stop_torghost():
-    print bcolors.RED + t() + 'STOPPING torghost' + bcolors.ENDC
+    print t() + bcolors.RED + ' STOPPING Tor' + bcolors.ENDC
     print t() + ' Flushing iptables, resetting to default',
-    os.system('mv /etc/resolv.conf.bak /etc/resolv.conf')
-    IpFlush = \
-        """
-	iptables -P INPUT ACCEPT
-	iptables -P FORWARD ACCEPT
-	iptables -P OUTPUT ACCEPT
-	iptables -t nat -F
-	iptables -t mangle -F
-	iptables -F
-	iptables -X
-	"""
-    os.system(IpFlush)
-    os.system('sudo fuser -k 9051/tcp > /dev/null 2>&1')
+    reset()
     print bcolors.GREEN + '[done]' + bcolors.ENDC
     print t() + ' Restarting Network manager',
     os.system('service network-manager restart')
     print bcolors.GREEN + '[done]' + bcolors.ENDC
-    print t() + ' Fetching current IP...'
     time.sleep(3)
-    print t() + ' CURRENT IP : ' + bcolors.GREEN + ip() + bcolors.ENDC
+    if tor_active() == True:
+        print t() + bcolors.RED + ' Something went wrong. You are still on Tor.' + bcolors.ENDC
+    else:
+        notify("Tor has stopped successfully!")
+        print t() + bcolors.GREEN + ' Tor has been' + bcolors.ENDC+bcolors.RED + ' stopped ' + bcolors.ENDC+bcolors.GREEN + 'successfully.' + bcolors.ENDC
 
 
 def switch_tor():
@@ -198,8 +252,8 @@ def switch_tor():
         controller.authenticate()
         controller.signal(Signal.NEWNYM)
     print bcolors.GREEN + '[done]' + bcolors.ENDC
-    print t() + ' Fetching current IP...'
-    print t() + ' CURRENT IP : ' + bcolors.GREEN + ip() + bcolors.ENDC
+    notify("Tor has switched the circuit.")
+    print t() + ' Tor has switched the circuit.'
 
 
 def check_update():
@@ -217,14 +271,14 @@ def check_update():
             bcolors.BOLD + "Would you like to download latest version and build from Git repo? [Y/n]" + bcolors.ENDC).lower()
         if choice in yes:
             os.system(
-                'cd /tmp && git clone  https://github.com/SusmithKrishnan/torghost')
+                'cd /tmp && git clone  https://github.com/NandanDesai/torghost')
             os.system('cd /tmp/torghost && sudo ./build.sh')
         elif choice in no:
             print t() + " Update aborted by user"
         else:
             print "Please respond with 'yes' or 'no'"
     else:
-        print t() + " Torghost is up to date!"
+        print t() + " TorGhost is up to date!"
 
 
 def main():
@@ -233,9 +287,10 @@ def main():
         check_update()
         usage()
     try:
-        (opts, args) = getopt.getopt(sys.argv[1:], 'srxhu', [
-            'start', 'stop', 'switch', 'help', 'update'])
+        (opts, args) = getopt.getopt(sys.argv[1:], 'srxhuvi', [
+            'start', 'stop', 'switch', 'help', 'update', 'version', 'info'])
     except getopt.GetoptError, err:
+        print "Invalid option selected. Here is how you can use TorGhost:"
         usage()
         sys.exit(2)
     for (o, a) in opts:
@@ -249,7 +304,12 @@ def main():
             switch_tor()
         elif o in ('-u', '--update'):
             check_update()
+        elif o in ('-v', '--version'):
+            printVersion()
+        elif o in ('-i', '--info'):
+            info()
         else:
+            print "Invalid option selected. Here is how you can use TorGhost:"
             usage()
 
 
