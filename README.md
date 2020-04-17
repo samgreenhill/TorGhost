@@ -63,4 +63,8 @@ As this TorGhost pings to https://check.torproject.org to confirm Tor connectivi
 
 ## Donate to Tor!
 
-If you are a regular user of Tor, then please [consider donating to the them!](https://donate.torproject.org/)
+If you are a regular user of Tor, then please consider donating to the them!
+
+<a href="https://donate.torproject.org/">
+  <img src="https://raw.githubusercontent.com/TheTorProject/tor-media/master/Support/Support_Small_Purple.png"> 
+</a>
