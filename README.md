@@ -6,7 +6,7 @@
 
 [![GitHub release](https://img.shields.io/github/v/release/databurn-in/TorGhost?include_prereleases)](https://github.com/databurn-in/TorGhost/releases) ![License: GPL-3.0](https://img.shields.io/github/license/databurn-in/TorGhost)
 
-TorGhost redirects all your internet traffic through SOCKS5 Tor proxy. DNS requests are also redirected via tor, thus preventing DNS leaks. The scripts also disables unsafe packets exiting the system. Some packets like ping request can compromise your identity.
+TorGhost redirects all your internet traffic through SOCKS5 Tor proxy. DNS requests are also redirected via Tor, thus preventing DNS leaks.
 
 ## Caution!
 
