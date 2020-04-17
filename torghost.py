@@ -218,7 +218,8 @@ def start_torghost():
 
     os.system(iptables_rules)
     print bcolors.GREEN + '[done]' + bcolors.ENDC
-    time.sleep(3)
+    print t() + ' Verifying your Tor connectivity...'
+    time.sleep(5)
     if tor_active() == True:
         notify("Tor has started successfully!")
         print t() + bcolors.GREEN + ' Tor has started successfully.' + bcolors.ENDC
@@ -236,6 +237,7 @@ def stop_torghost():
     print t() + ' Restarting Network manager',
     os.system('service network-manager restart')
     print bcolors.GREEN + '[done]' + bcolors.ENDC
+    print t() + ' Verifying whether you have disconnected from Tor or not...'
     time.sleep(3)
     if tor_active() == True:
         print t() + bcolors.RED + ' Something went wrong. You are still on Tor.' + bcolors.ENDC
