@@ -19,9 +19,13 @@ This project was built independently and is **not affiliated** with the [Tor Pro
 
 `cd torghost`
 
-`chmod +x build.sh`
+`sudo chmod +x build.sh`
 
-`./build.sh`
+`sudo ./build.sh`
+
+**To uninstall TorGhost:**
+
+`sudo ./uninstall.sh`
 
 ## Usage
 
