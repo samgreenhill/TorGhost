@@ -6,7 +6,7 @@
 
 [![GitHub release](https://img.shields.io/github/v/release/databurn-in/TorGhost?include_prereleases)](https://github.com/databurn-in/TorGhost/releases) ![License: GPL-3.0](https://img.shields.io/github/license/databurn-in/TorGhost)
 
-TorGhost redirects all your internet traffic through SOCKS5 Tor proxy. DNS requests are also redirected via Tor, thus preventing DNS leaks.
+TorGhost redirects all your internet traffic through SOCKS5 Tor proxy. DNS requests are also redirected via tor, thus preventing DNS leaks. The scripts also disables unsafe packets exiting the system. Some packets like ping request can compromise your identity.
 
 ## Caution!
 
@@ -61,6 +61,12 @@ The original project was not confirming whether the user is actually connected t
 ## Issue with this project
 
 As this TorGhost pings https://check.torproject.org to confirm Tor connectivity, any adversary (like the government or your ISP) can figure out that you are using this version of TorGhost just by monitoring your traffic to https://check.torproject.org domain. So, if your goal is to stay completely anonymous, then TorGhost is not for you. Also, it takes a lot more than just a simple script to make yourself anonymous on the internet.
+
+## To-Do
+
+ - [ ] Adding the ability to choose a specific country as Exit node.
+
+If you are interested to implement this feature for us, then open an issue and discuss it with us before sending the pull request.
 
 ## Donate to Tor!
 
