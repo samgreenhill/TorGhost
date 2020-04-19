@@ -114,10 +114,15 @@ def check_root():
         sys.exit(0)
 
 
-notify2.init("TorGhost")
-n = notify2.Notification(None)
-n.set_urgency(notify2.URGENCY_NORMAL)
-n.set_timeout(10000)
+try:
+    notify2.init("TorGhost")
+    n = notify2.Notification(None)
+    n.set_urgency(notify2.URGENCY_NORMAL)
+    n.set_timeout(10000)
+except:
+    # To-Do: log the error
+    # print t() + bcolors.RED + " Error displaying the notifications. [can be ignored]" + bcolors.ENDC
+    pass
 
 
 def notify(text):
@@ -126,7 +131,7 @@ def notify(text):
         n.show()
     except:
         # ignore if any notification related errors
-        return
+        pass
 
 
 signal.signal(signal.SIGINT, sigint_handler)
