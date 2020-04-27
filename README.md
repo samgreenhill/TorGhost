@@ -33,8 +33,15 @@ This project was built independently and is **not affiliated** with the [Tor Pro
 
 To start Tor: 
 ```bash 
-sudo torghost -s
+sudo torghost -a
 ```
+
+To start Tor with specific countries as exit nodes: 
+```bash 
+sudo torghost -a -c us,ch
+```
+Countries should be mentioned by their country codes. You can find all the country codes [here](https://github.com/databurn-in/TorGhost/blob/master/exitnodes.csv). When mentioning multiple countries, the country codes need to be comma-separated.
+
 
 To stop Tor: 
 ```bash 
@@ -56,17 +63,12 @@ sudo torghost -u
 
 This project is a fork of [this](https://github.com/SusmithKrishnan/torghost) project. The original project had privacy issues as described in [this](https://github.com/SusmithKrishnan/torghost/issues/74) thread. This project attempts to solve those issues. And also adds some new features.
 
-The original project was not confirming whether the user is actually connected to Tor or not after the user runs `sudo torghost -s`. This project confirms Tor connectivity by checking https://check.torproject.org (it is the official website for Tor project) and gives you a message with a desktop notification. If something goes wrong in that whole process and if user couldn't connect to Tor, then the whole process will be rolled back safely and a caution message will be displayed in the terminal.  
+The original project was not confirming whether the user is actually connected to Tor or not after the user runs `sudo torghost -a`. This project confirms Tor connectivity by checking https://check.torproject.org (it is the official website for Tor project) and gives you a message with a desktop notification. If something goes wrong in that whole process and if user couldn't connect to Tor, then the whole process will be rolled back safely and a caution message will be displayed in the terminal.  
 
 ## Issue with this project
 
 As this TorGhost pings https://check.torproject.org to confirm Tor connectivity, any adversary (like the government or your ISP) can figure out that you are using this version of TorGhost just by monitoring your traffic to https://check.torproject.org domain. So, if your goal is to stay completely anonymous, then TorGhost is not for you. Also, it takes a lot more than just a simple script to make yourself anonymous on the internet.
 
-## To-Do
-
- - [ ] Adding the ability to choose a specific country as Exit node.
-
-If you are interested to implement this feature for us, then open an issue and discuss it with us before sending the pull request.
 
 ## Donate to Tor!
 
