@@ -54,7 +54,7 @@ def logo():
   | |( (_) )| |   | (_, )| | | |( (_) )\__, \| |_ 
   (_)`\___/'(_)   (____/'(_) (_)`\___/'(____/`\__)
                                   
-        v{} - by DataBurn
+        v{} WSL2 - by Sam Greenhill
 
     """.format(VERSION)
     print(logo)
@@ -63,7 +63,7 @@ def logo():
 
 def usage():
     print("""
-    torghost usage:
+    torghost WSL2 usage:
     -s    --start       Start Tor
     -r    --switch      Request new tor exit node
     -x    --stop        Stop Tor
@@ -149,13 +149,13 @@ def reset():
     os.system('mv /etc/resolv.conf.bak /etc/resolv.conf')
     IpFlush = \
         """
-	iptables -P INPUT ACCEPT
-	iptables -P FORWARD ACCEPT
-	iptables -P OUTPUT ACCEPT
-	iptables -t nat -F
-	iptables -t mangle -F
-	iptables -F
-	iptables -X
+	iptables-legacy -P INPUT ACCEPT
+	iptables-legacy -P FORWARD ACCEPT
+	iptables-legacy -P OUTPUT ACCEPT
+	iptables-legacy -t nat -F
+	iptables-legacy -t mangle -F
+	iptables-legacy -F
+	iptables-legacy -X
 	"""
     os.system(IpFlush)
 
@@ -208,7 +208,7 @@ def start_tor(countries):
             print(bcolors.GREEN + '[done]' + bcolors.ENDC)
 
     print(t() + ' Stopping Tor service (if already ON)', end=' ')
-    os.system('sudo systemctl stop tor')
+    os.system('sudo service tor stop > /dev/null 2>&1')
     os.system('sudo fuser -k 9051/tcp > /dev/null 2>&1')
     print(bcolors.GREEN + '[done]' + bcolors.ENDC)
     print(t() + ' Starting new Tor daemon ', end=' ')
@@ -223,22 +223,22 @@ def start_tor(countries):
 	TOR_UID=%s
 	TRANS_PORT="9040"
 
-	iptables -F
-	iptables -t nat -F
+	iptables-legacy -F
+	iptables-legacy -t nat -F
 
-	iptables -t nat -A OUTPUT -m owner --uid-owner $TOR_UID -j RETURN
-	iptables -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to-ports 5353
+	iptables-legacy -t nat -A OUTPUT -m owner --uid-owner $TOR_UID -j RETURN
+	iptables-legacy -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to-ports 5353
 	for NET in $NON_TOR 127.0.0.0/9 127.128.0.0/10; do
-	 iptables -t nat -A OUTPUT -d $NET -j RETURN
+	 iptables-legacy -t nat -A OUTPUT -d $NET -j RETURN
 	done
-	iptables -t nat -A OUTPUT -p tcp --syn -j REDIRECT --to-ports $TRANS_PORT
+	iptables-legacy -t nat -A OUTPUT -p tcp --syn -j REDIRECT --to-ports $TRANS_PORT
 
-	iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+	iptables-legacy -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 	for NET in $NON_TOR 127.0.0.0/8; do
-	 iptables -A OUTPUT -d $NET -j ACCEPT
+	 iptables-legacy -A OUTPUT -d $NET -j ACCEPT
 	done
-	iptables -A OUTPUT -m owner --uid-owner $TOR_UID -j ACCEPT
-	iptables -A OUTPUT -j REJECT
+	iptables-legacy -A OUTPUT -m owner --uid-owner $TOR_UID -j ACCEPT
+	iptables-legacy -A OUTPUT -j REJECT
 	""" \
         % subprocess.getoutput('id -ur debian-tor')
 
