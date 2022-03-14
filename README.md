@@ -61,7 +61,7 @@ sudo torghost -u
 ## About this project
 
 
-This project is a fork of [this](https://github.com/ databurn-in/TorGhost) project with changes so that it supports running Kali linux in WSL2.
+This project is a fork of [this](https://github.com/databurn-in/TorGhost) project with changes so that it supports running Kali linux in WSL2.
 
 ## Issue with this project
 
